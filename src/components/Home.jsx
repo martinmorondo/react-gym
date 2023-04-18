@@ -34,6 +34,18 @@ const Home = () => {
       {showPopup && (
         <div className="fixed top-0 left-0 h-full w-full flex items-center justify-center bg-gray-700 bg-opacity-50 z-20">
           <div className="bg-white p-8 rounded-lg">
+          <button
+            className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-2 rounded-full focus:outline-none focus:shadow-outline transform hover:scale-110 shadow-lg transition duration-500 absolute top-40 mt-4 ml-60"
+            onClick={togglePopup}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" className="x-circle w-6 h-6">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.5-10.5a1 1 0 00-1.4 1.4L11.41 10l-1.46 1.46a1 1 0 001.4 1.4L12 11.41l1.46 1.46a1 1 0 001.4-1.4L12.59 10l1.46-1.46a1 1 0 00-1.4-1.4L12 8.59l-1.46-1.46a1 1 0 00-1.4 1.4L10.59 10l-1.46 1.46a1 1 0 001.4 1.4L10 11.41l1.46 1.46a1 1 0 001.4 0 1 1 0 000-1.4L11.41 10l1.46-1.46z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
             <h2 className="text-2xl font-bold mb-4">Contáctanos para unirte</h2>
             <form>
               <div className="mb-4">
