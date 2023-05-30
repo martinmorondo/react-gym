@@ -12,11 +12,15 @@ const Home = () => {
     if (showPopup) {
       const timer = setTimeout(() => {
         setShowPopup(false);
-      }, 10000); // 10 segundos en milisegundos
+      }, 10000);
       return () => clearTimeout(timer);
     }
   }, [showPopup]);
 
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <div className="bg-gray-900 flex flex-col items-center justify-center">
       <div className='container'>
@@ -35,7 +39,7 @@ const Home = () => {
         <div className="fixed top-0 left-0 h-full w-full flex items-center justify-center bg-gray-700 bg-opacity-50 z-20">
           <div className="bg-white p-8 rounded-lg">
           <button
-            className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-2 rounded-full focus:outline-none focus:shadow-outline transform hover:scale-110 shadow-lg transition duration-500 absolute top-40 mt-4 ml-60"
+            className="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-1 rounded-full focus:outline-none focus:shadow-outline transform hover:scale-110 shadow-lg transition duration-500 absolute top-40 mt-4 ml-60"
             onClick={togglePopup}
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="x-circle w-6 h-6">
@@ -47,7 +51,7 @@ const Home = () => {
             </svg>
           </button>
             <h2 className="text-2xl font-bold mb-4">Contáctanos para unirte</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="block text-gray-700 font-bold mb-2" htmlFor="name">
                   Nombre
@@ -57,6 +61,7 @@ const Home = () => {
                   id="name"
                   type="text"
                   placeholder="Nombre"
+                  required
                 />
               </div>
               <div className="mb-4">
@@ -68,6 +73,7 @@ const Home = () => {
                   id="email"
                   type="email"
                   placeholder="Email"
+                  required
                 />
               </div>
               <div className="mb-4">
@@ -79,6 +85,7 @@ const Home = () => {
                   id="phone"
                   type="tel"
                   placeholder="Teléfono"
+                  required
                 />
               </div>
               <button
