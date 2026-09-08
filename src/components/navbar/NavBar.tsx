@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, type NavLinkProps } from 'react-router-dom';
 
 const navigationItems = [
 { label: 'Inicio', path: '/' },
@@ -19,12 +19,14 @@ const closeMenu = () => {
 setIsMenuOpen(false);
 };
 
-const getNavLinkClassName = ({ isActive }) =>
-`block rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-      isActive
-        ? 'bg-gray-700 text-white'
-        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-    }`;
+const getNavLinkClassName: NonNullable<NavLinkProps['className']> = ({
+  isActive,
+}) =>
+  `block rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+    isActive
+      ? 'bg-gray-700 text-white'
+      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+  }`;
 
 return ( <nav className="bg-gray-800"> <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8"> <div className="relative flex h-16 items-center justify-between"> <NavLink
          to="/"
