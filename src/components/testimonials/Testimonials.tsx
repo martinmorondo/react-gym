@@ -1,11 +1,5 @@
 import { useState } from 'react';
-
-type Testimonial = {
-id: number;
-name: string;
-image: string;
-text: string;
-};
+import type { Testimonial } from '../../types/testimonial';
 
 const testimonials: Testimonial[] = [
 {

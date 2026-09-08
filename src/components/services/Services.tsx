@@ -1,15 +1,5 @@
 import { useState } from 'react';
-
-type Service = {
-id: number;
-title: string;
-description: string;
-icon: string;
-image: string;
-price: string;
-time: string;
-customizations: string[];
-};
+import type { Service } from '../../types/service';
 
 const services: Service[] = [
 {
