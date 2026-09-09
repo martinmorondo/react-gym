@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink, type NavLinkProps } from 'react-router-dom';
+import { brand } from '../../constants/brand';
 
 const navigationItems = [
   { label: 'Inicio', path: '/' },
@@ -30,12 +31,13 @@ const getNavLinkClassName: NonNullable<NavLinkProps['className']> = ({
   }`;
 
 return ( <nav className="bg-gray-800"> <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8"> <div className="relative flex h-16 items-center justify-between"> <NavLink
-         to="/"
-         onClick={closeMenu}
-         className="text-xl font-bold text-white"
-         aria-label="GymFit - Ir al inicio"
-       >
-❖ </NavLink>
+  to="/"
+  onClick={closeMenu}
+  className="text-xl font-bold tracking-tight text-white"
+  aria-label={`${brand.name} - Ir al inicio`}
+>
+  {brand.shortName}
+</NavLink>
 
       <div className="hidden sm:block">
         <ul className="flex items-center gap-2" aria-label="Navegación principal">

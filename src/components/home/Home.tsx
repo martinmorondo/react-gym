@@ -1,27 +1,23 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { brand } from '../../constants/brand';
+import interiorGymImage from '../../assets/img/interior-gimnasio.jpg';
+import industrialGymImage from '../../assets/img/gimnasio-industrial.jpg';
+import weightPlateImage from '../../assets/img/disco-45-lbs.jpg';
 
 const galleryImages = [
-{
-src: 'https://source.unsplash.com/featured/?gym,weights,yoga',
-alt: 'Personas entrenando en un gimnasio',
-},
-{
-src: 'https://source.unsplash.com/featured/?gym,fitness,weights',
-alt: 'Equipamiento de entrenamiento en un gimnasio',
-},
-{
-src: 'https://source.unsplash.com/featured/?gym,fitness',
-alt: 'Zona de entrenamiento de un gimnasio',
-},
-{
-src: 'https://source.unsplash.com/featured/?weights,fitness,gym',
-alt: 'Pesas y equipamiento de entrenamiento',
-},
-{
-src: 'https://source.unsplash.com/featured/?yoga,fitness,gym',
-alt: 'Personas realizando ejercicios de yoga',
-},
+  {
+    src: interiorGymImage,
+    alt: 'Interior de FORGE Training Club con equipamiento de fuerza',
+  },
+  {
+    src: industrialGymImage,
+    alt: 'Zona de entrenamiento de fuerza de FORGE Training Club',
+  },
+  {
+    src: weightPlateImage,
+    alt: 'Disco de peso utilizado para entrenamiento de fuerza',
+  },
 ];
 
 function Home() {
@@ -41,31 +37,48 @@ closeJoinModal();
 };
 
 return ( 
-      <main className="bg-gray-900"> <section className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 py-12"> <div className="container flex flex-col items-center"> 
-      <h1 className="my-8 text-center text-4xl font-bold text-white">
-      Bienvenidos a nuestro gimnasio </h1>
-      <p className="mx-auto mb-8 max-w-3xl text-center text-xl font-medium leading-loose text-white">
-        En nuestro gimnasio, nos enfocamos en ayudar a nuestros clientes a
-        alcanzar sus metas de fitness y mejorar su estilo de vida.
-        Ofrecemos una amplia variedad de equipos y clases, así como
-        programas personalizados de entrenamiento con instructores
-        altamente capacitados para ayudarte a alcanzar tus objetivos.
+      <main className="bg-gray-900"> 
+      
+      <section className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden">
+  <img
+    src={interiorGymImage}
+    alt="Interior de FORGE Training Club"
+    className="absolute inset-0 -z-20 h-full w-full object-cover"
+  />
+
+ <div className="absolute inset-0 -z-10 bg-black/45" />
+
+<div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/85 via-black/60 to-black/20" />
+
+  <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl items-center px-4 py-16 sm:px-6 lg:px-8">
+    <div className="max-w-2xl">
+      <p className="mb-4 text-sm font-bold uppercase tracking-[0.3em] text-red-500">
+        {brand.name}
+      </p>
+
+      <h1 className="mb-6 max-w-xl text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
+        {brand.tagline}
+      </h1>
+
+      <p className="mb-8 max-w-2xl text-lg leading-relaxed text-gray-200 sm:text-xl">
+        {brand.description}
       </p>
 
       <button
         type="button"
         onClick={openJoinModal}
-        className="rounded-full bg-red-600 px-6 py-3 font-bold text-white shadow-lg transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-900"
+        className="rounded-full bg-red-600 px-7 py-3.5 font-bold text-white shadow-lg transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-900"
       >
-        ¡Comienza ahora!
+        Entrená con nosotros
       </button>
     </div>
-  </section>
+  </div>
+</section>
 
   <section
-    className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 pb-12 md:grid-cols-2 lg:grid-cols-5"
-    aria-label="Galería del gimnasio"
-  >
+  className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 pb-12 md:grid-cols-3"
+  aria-label="Galería de FORGE Training Club"
+>
     {galleryImages.map((image) => (
       <img
         key={image.src}
