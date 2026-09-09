@@ -8,18 +8,20 @@ import Testimonials from './components/testimonials/Testimonials';
 import Exercises from './pages/Exercises';
 
 function App() {
-return (
-<> <NavBar />
-  <Routes>
-    <Route path="/" element={<Home />} />
-    <Route path="/exercises" element={<Exercises />} />
-    <Route path="/services" element={<Services />} />
-    <Route path="/testimonials" element={<Testimonials />} />
-    <Route path="/contact" element={<Contact />} />
-    <Route path="*" element={<NotFound />} />
-  </Routes>
-</>
-);
+  return (
+    <>
+      <NavBar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/exercises" element={<Exercises />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
+  );
 }
 
 export default App;
