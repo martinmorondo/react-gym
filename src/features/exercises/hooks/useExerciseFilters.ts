@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useDebounce } from '../../../hooks/useDebounce';
 import type { Exercise } from '../../../types/exercise';
 
 type UseExerciseFiltersResult = {
@@ -20,10 +21,34 @@ exercises: Exercise[]
 ): UseExerciseFiltersResult {
 const [searchParams, setSearchParams] = useSearchParams();
 
-const searchTerm = searchParams.get('search') ?? '';
+const [searchTerm, setSearchTermState] = useState(
+() => searchParams.get('search') ?? ''
+);
+
 const muscleGroup = searchParams.get('muscleGroup') ?? '';
 const difficulty = searchParams.get('difficulty') ?? '';
 const equipment = searchParams.get('equipment') ?? '';
+
+const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+useEffect(() => {
+const currentSearch = searchParams.get('search') ?? '';
+
+if (debouncedSearchTerm === currentSearch) {
+  return;
+}
+
+const nextParams = new URLSearchParams(searchParams);
+
+if (debouncedSearchTerm) {
+  nextParams.set('search', debouncedSearchTerm);
+} else {
+  nextParams.delete('search');
+}
+
+setSearchParams(nextParams, { replace: true });
+
+}, [debouncedSearchTerm, searchParams, setSearchParams]);
 
 const filteredExercises = useMemo(() => {
 const normalizedSearchTerm = searchTerm.trim().toLowerCase();
@@ -53,6 +78,11 @@ return exercises.filter((exercise) => {
 }, [exercises, searchTerm, muscleGroup, difficulty, equipment]);
 
 const updateFilter = (key: string, value: string) => {
+if (key === 'search') {
+setSearchTermState(value);
+return;
+}
+
 const nextParams = new URLSearchParams(searchParams);
 
 if (value) {
@@ -62,10 +92,10 @@ if (value) {
 }
 
 setSearchParams(nextParams);
-
 };
 
 const clearFilters = () => {
+setSearchTermState('');
 setSearchParams({});
 };
 
