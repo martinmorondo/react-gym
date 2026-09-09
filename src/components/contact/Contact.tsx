@@ -3,6 +3,10 @@ import type { ChangeEvent, FormEvent } from 'react';
 
 import { contactService } from '../../services/contactService';
 import type { ContactFormData } from '../../types/contact';
+import {
+  type ContactFormErrors,
+  validateContactForm,
+} from '../../utils/contactValidation';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -17,6 +21,8 @@ function Contact() {
   const [formData, setFormData] =
     useState<ContactFormData>(initialFormData);
 
+  const [errors, setErrors] = useState<ContactFormErrors>({});
+
   const [submitStatus, setSubmitStatus] =
     useState<SubmitStatus>('idle');
 
@@ -29,6 +35,15 @@ function Contact() {
       ...currentFormData,
       [name]: value,
     }));
+
+    setErrors((currentErrors) => ({
+      ...currentErrors,
+      [name]: undefined,
+    }));
+
+    if (submitStatus === 'error') {
+      setSubmitStatus('idle');
+    }
   };
 
   const handleSubmit = async (
@@ -36,7 +51,16 @@ function Contact() {
   ) => {
     event.preventDefault();
 
+    const validationErrors = validateContactForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setSubmitStatus('idle');
+      return;
+    }
+
     try {
+      setErrors({});
       setSubmitStatus('submitting');
 
       await contactService.submit(formData);
@@ -72,6 +96,7 @@ function Contact() {
           <div
             className="mb-6 rounded-lg border border-green-500/30 bg-green-500/10 p-4 text-green-300"
             role="status"
+            aria-live="polite"
           >
             Tu mensaje fue enviado correctamente.
           </div>
@@ -81,6 +106,7 @@ function Contact() {
           <div
             className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-300"
             role="alert"
+            aria-live="assertive"
           >
             No pudimos enviar tu mensaje. Intentá nuevamente.
           </div>
@@ -89,6 +115,7 @@ function Contact() {
         <form
           className="space-y-5 rounded-xl bg-gray-800 p-6 shadow-xl sm:p-8"
           onSubmit={handleSubmit}
+          noValidate
         >
           <div>
             <label
@@ -106,9 +133,22 @@ function Contact() {
               onChange={handleChange}
               autoComplete="name"
               disabled={isSubmitting}
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby={errors.name ? 'name-error' : undefined}
               required
-              className="w-full rounded-md border border-gray-600 bg-gray-900 px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className={`w-full rounded-md border bg-gray-900 px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+                errors.name ? 'border-red-500' : 'border-gray-600'
+              }`}
             />
+
+            {errors.name && (
+              <p
+                id="name-error"
+                className="mt-1 text-sm text-red-400"
+              >
+                {errors.name}
+              </p>
+            )}
           </div>
 
           <div>
@@ -127,9 +167,22 @@ function Contact() {
               onChange={handleChange}
               autoComplete="email"
               disabled={isSubmitting}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? 'email-error' : undefined}
               required
-              className="w-full rounded-md border border-gray-600 bg-gray-900 px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className={`w-full rounded-md border bg-gray-900 px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+                errors.email ? 'border-red-500' : 'border-gray-600'
+              }`}
             />
+
+            {errors.email && (
+              <p
+                id="email-error"
+                className="mt-1 text-sm text-red-400"
+              >
+                {errors.email}
+              </p>
+            )}
           </div>
 
           <div>
@@ -148,9 +201,22 @@ function Contact() {
               onChange={handleChange}
               autoComplete="tel"
               disabled={isSubmitting}
+              aria-invalid={Boolean(errors.phone)}
+              aria-describedby={errors.phone ? 'phone-error' : undefined}
               required
-              className="w-full rounded-md border border-gray-600 bg-gray-900 px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className={`w-full rounded-md border bg-gray-900 px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+                errors.phone ? 'border-red-500' : 'border-gray-600'
+              }`}
             />
+
+            {errors.phone && (
+              <p
+                id="phone-error"
+                className="mt-1 text-sm text-red-400"
+              >
+                {errors.phone}
+              </p>
+            )}
           </div>
 
           <div>
@@ -168,9 +234,24 @@ function Contact() {
               onChange={handleChange}
               rows={5}
               disabled={isSubmitting}
+              aria-invalid={Boolean(errors.question)}
+              aria-describedby={
+                errors.question ? 'question-error' : undefined
+              }
               required
-              className="w-full resize-y rounded-md border border-gray-600 bg-gray-900 px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+              className={`w-full resize-y rounded-md border bg-gray-900 px-3 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+                errors.question ? 'border-red-500' : 'border-gray-600'
+              }`}
             />
+
+            {errors.question && (
+              <p
+                id="question-error"
+                className="mt-1 text-sm text-red-400"
+              >
+                {errors.question}
+              </p>
+            )}
           </div>
 
           <button
