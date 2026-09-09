@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import type { Exercise } from '../../../types/exercise';
 
 type UseExerciseFiltersResult = {
@@ -17,10 +18,12 @@ clearFilters: () => void;
 export function useExerciseFilters(
 exercises: Exercise[]
 ): UseExerciseFiltersResult {
-const [searchTerm, setSearchTerm] = useState('');
-const [muscleGroup, setMuscleGroup] = useState('');
-const [difficulty, setDifficulty] = useState('');
-const [equipment, setEquipment] = useState('');
+const [searchParams, setSearchParams] = useSearchParams();
+
+const searchTerm = searchParams.get('search') ?? '';
+const muscleGroup = searchParams.get('muscleGroup') ?? '';
+const difficulty = searchParams.get('difficulty') ?? '';
+const equipment = searchParams.get('equipment') ?? '';
 
 const filteredExercises = useMemo(() => {
 const normalizedSearchTerm = searchTerm.trim().toLowerCase();
@@ -49,11 +52,21 @@ return exercises.filter((exercise) => {
 
 }, [exercises, searchTerm, muscleGroup, difficulty, equipment]);
 
+const updateFilter = (key: string, value: string) => {
+const nextParams = new URLSearchParams(searchParams);
+
+if (value) {
+  nextParams.set(key, value);
+} else {
+  nextParams.delete(key);
+}
+
+setSearchParams(nextParams);
+
+};
+
 const clearFilters = () => {
-setSearchTerm('');
-setMuscleGroup('');
-setDifficulty('');
-setEquipment('');
+setSearchParams({});
 };
 
 return {
@@ -62,10 +75,10 @@ muscleGroup,
 difficulty,
 equipment,
 filteredExercises,
-setSearchTerm,
-setMuscleGroup,
-setDifficulty,
-setEquipment,
+setSearchTerm: (value) => updateFilter('search', value),
+setMuscleGroup: (value) => updateFilter('muscleGroup', value),
+setDifficulty: (value) => updateFilter('difficulty', value),
+setEquipment: (value) => updateFilter('equipment', value),
 clearFilters,
 };
 }
