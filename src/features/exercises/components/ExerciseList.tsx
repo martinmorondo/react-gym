@@ -1,5 +1,6 @@
 import ExerciseCard from './ExerciseCard';
 import type { Exercise } from '../../../types/exercise';
+import EmptyState from '../../../components/feedback/EmptyState';
 
 type ExerciseListProps = {
   exercises: Exercise[];
@@ -30,27 +31,25 @@ function ExerciseList({
     );
   }
 
-  if (exercises.length === 0) {
-    return (
-      <div className="rounded-lg bg-gray-800 px-6 py-12 text-center">
-        <h2 className="mb-2 text-xl font-semibold text-white">
-          No encontramos ejercicios
-        </h2>
+  if (totalExercises === 0) {
+  return (
+    <EmptyState
+      title="No hay ejercicios disponibles"
+      message="La biblioteca de ejercicios está vacía."
+    />
+  );
+}
 
-        <p className="mb-5 text-gray-400">
-          Probá modificando los filtros o la búsqueda.
-        </p>
-
-        <button
-          type="button"
-          onClick={onClearFilters}
-          className="rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-        >
-          Limpiar filtros
-        </button>
-      </div>
-    );
-  }
+if (exercises.length === 0) {
+  return (
+    <EmptyState
+      title="No encontramos ejercicios"
+      message="Probá modificando los filtros o la búsqueda."
+      actionLabel="Limpiar filtros"
+      onAction={onClearFilters}
+    />
+  );
+}
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

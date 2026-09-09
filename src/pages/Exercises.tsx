@@ -3,6 +3,8 @@ import ExerciseList from '../features/exercises/components/ExerciseList';
 import { useExerciseFilters } from '../features/exercises/hooks/useExerciseFilters';
 import { useExercises } from '../features/exercises/hooks/useExercises';
 import { useFavorites } from '../features/exercises/hooks/useFavorites';
+import LoadingState from '../components/feedback/LoadingState';
+import ErrorState from '../components/feedback/ErrorState';
 
 function Exercises() {
 const { exercises, isLoading, error, refetch } = useExercises();
@@ -51,30 +53,14 @@ Biblioteca </p>
       </p>
     </header>
 
-    {isLoading && (
-      <p className="py-12 text-center text-gray-400" role="status">
-        Cargando ejercicios...
-      </p>
-    )}
+    {isLoading && <LoadingState message="Cargando ejercicios..." />}
 
     {error && (
-      <div
-        className="rounded-lg border border-red-500/30 bg-red-500/10 p-6 text-center"
-        role="alert"
-      >
-        <p className="mb-4 font-medium text-red-300">
-          {error}
-        </p>
-
-        <button
-          type="button"
-          className="rounded-md bg-red-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-          onClick={() => void refetch()}
-        >
-          Reintentar
-        </button>
-      </div>
-    )}
+  <ErrorState
+    message={error}
+    onRetry={() => void refetch()}
+  />
+)}
 
     {!isLoading && !error && (
       <>
