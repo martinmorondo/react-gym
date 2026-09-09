@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import type { FormEvent } from 'react';
 
 import { brand } from '../../constants/brand';
-import interiorGymImage from '../../assets/img/interior-gimnasio.jpg';
 import industrialGymImage from '../../assets/img/gimnasio-industrial.jpg';
+import interiorGymImage from '../../assets/img/interior-gimnasio.jpg';
 import weightPlateImage from '../../assets/img/disco-45-lbs.jpg';
+import { useContactForm } from '../../features/contact/hooks/useContactForm';
 
 const galleryImages = [
   {
@@ -20,6 +20,15 @@ const galleryImages = [
 function Home() {
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
+  const {
+    formData,
+    errors,
+    submitStatus,
+    isSubmitting,
+    handleChange,
+    handleSubmit,
+  } = useContactForm();
+
   const openJoinModal = () => {
     setIsJoinModalOpen(true);
   };
@@ -28,10 +37,11 @@ function Home() {
     setIsJoinModalOpen(false);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    closeJoinModal();
-  };
+ const handleJoinSubmit = async (
+  event: FormEvent<HTMLFormElement>
+) => {
+  await handleSubmit(event);
+};
 
   return (
     <main className="bg-gray-900">
@@ -123,7 +133,7 @@ function Home() {
               >
                 <path
                   fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414 1 1 0 01-1.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                   clipRule="evenodd"
                 />
               </svg>
@@ -136,68 +146,203 @@ function Home() {
               Unite a FORGE
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label
-                  htmlFor="join-name"
-                  className="mb-1 block font-bold text-gray-700"
-                >
-                  Nombre
-                </label>
-
-                <input
-                  id="join-name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  required
-                />
+            {submitStatus === 'success' && (
+              <div
+                className="mb-6 rounded-lg border border-green-500/30 bg-green-500/10 p-4 text-green-700"
+                role="status"
+                aria-live="polite"
+              >
+                Recibimos tu solicitud. Nos pondremos en contacto con vos.
               </div>
+            )}
 
-              <div>
-                <label
-                  htmlFor="join-email"
-                  className="mb-1 block font-bold text-gray-700"
-                >
-                  Email
-                </label>
-
-                <input
-                  id="join-email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  required
-                />
+            {submitStatus === 'error' && (
+              <div
+                className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-700"
+                role="alert"
+                aria-live="assertive"
+              >
+                No pudimos enviar tu solicitud. Intentá nuevamente.
               </div>
+            )}
 
-              <div>
-                <label
-                  htmlFor="join-phone"
-                  className="mb-1 block font-bold text-gray-700"
+            {submitStatus !== 'success' && (
+              <form
+                onSubmit={handleJoinSubmit}
+                className="space-y-4"
+                noValidate
+              >
+                <div>
+                  <label
+                    htmlFor="join-name"
+                    className="mb-1 block font-bold text-gray-700"
+                  >
+                    Nombre
+                  </label>
+
+                  <input
+                    id="join-name"
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    autoComplete="name"
+                    disabled={isSubmitting}
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={
+                      errors.name ? 'join-name-error' : undefined
+                    }
+                    className={`w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+                      errors.name
+                        ? 'border-red-500'
+                        : 'border-gray-300'
+                    }`}
+                  />
+
+                  {errors.name && (
+                    <p
+                      id="join-name-error"
+                      className="mt-1 text-sm text-red-600"
+                    >
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="join-email"
+                    className="mb-1 block font-bold text-gray-700"
+                  >
+                    Email
+                  </label>
+
+                  <input
+                    id="join-email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    autoComplete="email"
+                    disabled={isSubmitting}
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={
+                      errors.email ? 'join-email-error' : undefined
+                    }
+                    className={`w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+                      errors.email
+                        ? 'border-red-500'
+                        : 'border-gray-300'
+                    }`}
+                  />
+
+                  {errors.email && (
+                    <p
+                      id="join-email-error"
+                      className="mt-1 text-sm text-red-600"
+                    >
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="join-phone"
+                    className="mb-1 block font-bold text-gray-700"
+                  >
+                    Teléfono
+                  </label>
+
+                  <input
+                    id="join-phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    autoComplete="tel"
+                    disabled={isSubmitting}
+                    aria-invalid={Boolean(errors.phone)}
+                    aria-describedby={
+                      errors.phone ? 'join-phone-error' : undefined
+                    }
+                    className={`w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+                      errors.phone
+                        ? 'border-red-500'
+                        : 'border-gray-300'
+                    }`}
+                  />
+
+                  {errors.phone && (
+                    <p
+                      id="join-phone-error"
+                      className="mt-1 text-sm text-red-600"
+                    >
+                      {errors.phone}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="join-question"
+                    className="mb-1 block font-bold text-gray-700"
+                  >
+                    ¿Cuál es tu objetivo?
+                  </label>
+
+                  <textarea
+                    id="join-question"
+                    name="question"
+                    value={formData.question}
+                    onChange={handleChange}
+                    rows={4}
+                    disabled={isSubmitting}
+                    aria-invalid={Boolean(errors.question)}
+                    aria-describedby={
+                      errors.question
+                        ? 'join-question-error'
+                        : undefined
+                    }
+                    placeholder="Contanos qué querés conseguir con tu entrenamiento."
+                    className={`w-full resize-y rounded-md border bg-white px-3 py-2 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+                      errors.question
+                        ? 'border-red-500'
+                        : 'border-gray-300'
+                    }`}
+                  />
+
+                  {errors.question && (
+                    <p
+                      id="join-question-error"
+                      className="mt-1 text-sm text-red-600"
+                    >
+                      {errors.question}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full rounded-full bg-red-600 px-4 py-2 font-bold text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Teléfono
-                </label>
+                  {isSubmitting
+                    ? 'Enviando...'
+                    : 'Quiero entrenar'}
+                </button>
+              </form>
+            )}
 
-                <input
-                  id="join-phone"
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  required
-                />
-              </div>
-
+            {submitStatus === 'success' && (
               <button
-                type="submit"
+                type="button"
+                onClick={closeJoinModal}
                 className="w-full rounded-full bg-red-600 px-4 py-2 font-bold text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
-                Quiero entrenar
+                Cerrar
               </button>
-            </form>
+            )}
           </section>
         </div>
       )}
