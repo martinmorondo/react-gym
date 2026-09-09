@@ -5,103 +5,104 @@ import { useExercises } from '../features/exercises/hooks/useExercises';
 import { useFavorites } from '../features/exercises/hooks/useFavorites';
 import LoadingState from '../components/feedback/LoadingState';
 import ErrorState from '../components/feedback/ErrorState';
+import {
+  DIFFICULTIES,
+  EQUIPMENT_OPTIONS,
+  MUSCLE_GROUPS,
+} from '../constants/exerciseOptions';
 
 function Exercises() {
-const { exercises, isLoading, error, refetch } = useExercises();
+  const { exercises, isLoading, error, refetch } = useExercises();
 
-const {
-isFavorite,
-toggleFavorite,
-} = useFavorites();
+  const {
+    isFavorite,
+    toggleFavorite,
+  } = useFavorites();
 
-const uniqueMuscleGroups = [
-...new Set(exercises.map((exercise) => exercise.muscleGroup)),
-];
+  const {
+    searchTerm,
+    muscleGroup,
+    difficulty,
+    equipment,
+    favoritesOnly,
+    filteredExercises,
+    setSearchTerm,
+    setMuscleGroup,
+    setDifficulty,
+    setEquipment,
+    setFavoritesOnly,
+    clearFilters,
+  } = useExerciseFilters(exercises, isFavorite);
 
-const uniqueDifficulties = [
-...new Set(exercises.map((exercise) => exercise.difficulty)),
-];
+  return (
+    <main className="min-h-screen bg-gray-900 px-4 py-10">
+      <div className="mx-auto max-w-7xl">
+        <header className="mb-10">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-blue-400">
+            Biblioteca
+          </p>
 
-const uniqueEquipments = [
-...new Set(exercises.map((exercise) => exercise.equipment)),
-];
+          <h1 className="mb-4 text-4xl font-bold text-white">
+            Ejercicios
+          </h1>
 
-const {
-searchTerm,
-muscleGroup,
-difficulty,
-equipment,
-favoritesOnly,
-filteredExercises,
-setSearchTerm,
-setMuscleGroup,
-setDifficulty,
-setEquipment,
-setFavoritesOnly,
-clearFilters,
-} = useExerciseFilters(exercises, isFavorite);
+          <p className="max-w-2xl text-gray-400">
+            Explora ejercicios organizados por grupo muscular,
+            equipamiento y nivel de dificultad.
+          </p>
+        </header>
 
-return ( <main className="min-h-screen bg-gray-900 px-4 py-10"> <div className="mx-auto max-w-7xl"> <header className="mb-10"> <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-blue-400">
-Biblioteca </p>
-      <h1 className="mb-4 text-4xl font-bold text-white">
-        Ejercicios
-      </h1>
+        {isLoading && (
+          <LoadingState message="Cargando ejercicios..." />
+        )}
 
-      <p className="max-w-2xl text-gray-400">
-        Explora ejercicios organizados por grupo muscular,
-        equipamiento y nivel de dificultad.
-      </p>
-    </header>
+        {error && (
+          <ErrorState
+            message={error}
+            onRetry={() => void refetch()}
+          />
+        )}
 
-    {isLoading && <LoadingState message="Cargando ejercicios..." />}
+        {!isLoading && !error && (
+          <>
+            <ExerciseFilters
+              searchTerm={searchTerm}
+              muscleGroup={muscleGroup}
+              difficulty={difficulty}
+              equipment={equipment}
+              favoritesOnly={favoritesOnly}
+              muscleGroups={MUSCLE_GROUPS}
+              difficulties={DIFFICULTIES}
+              equipments={EQUIPMENT_OPTIONS}
+              onSearchChange={setSearchTerm}
+              onMuscleGroupChange={setMuscleGroup}
+              onDifficultyChange={setDifficulty}
+              onEquipmentChange={setEquipment}
+              onFavoritesChange={setFavoritesOnly}
+              onClear={clearFilters}
+            />
 
-    {error && (
-  <ErrorState
-    message={error}
-    onRetry={() => void refetch()}
-  />
-)}
+            <div
+              className="mb-4 text-sm text-gray-400"
+              aria-live="polite"
+            >
+              {filteredExercises.length === 1
+                ? '1 ejercicio encontrado'
+                : `${filteredExercises.length} ejercicios encontrados`}
+            </div>
 
-    {!isLoading && !error && (
-      <>
-        <ExerciseFilters
-          searchTerm={searchTerm}
-          muscleGroup={muscleGroup}
-          difficulty={difficulty}
-          equipment={equipment}
-          favoritesOnly={favoritesOnly}
-          muscleGroups={uniqueMuscleGroups}
-          difficulties={uniqueDifficulties}
-          equipments={uniqueEquipments}
-          onSearchChange={setSearchTerm}
-          onMuscleGroupChange={setMuscleGroup}
-          onDifficultyChange={setDifficulty}
-          onEquipmentChange={setEquipment}
-          onFavoritesChange={setFavoritesOnly}
-          onClear={clearFilters}
-        />
-
-        <div
-          className="mb-4 text-sm text-gray-400"
-          aria-live="polite"
-        >
-          {filteredExercises.length === 1
-            ? '1 ejercicio encontrado'
-            : `${filteredExercises.length} ejercicios encontrados`}
-        </div>
-
-       <ExerciseList
-        exercises={filteredExercises}
-        totalExercises={exercises.length}
-        isFavorite={isFavorite}
-        onToggleFavorite={toggleFavorite}
-        onClearFilters={clearFilters}
-      />
-      </>
-    )}
-  </div>
-</main>
-);
+            <ExerciseList
+              exercises={filteredExercises}
+              totalExercises={exercises.length}
+              isFavorite={isFavorite}
+              onToggleFavorite={toggleFavorite}
+              onClearFilters={clearFilters}
+            />
+          </>
+        )}
+      </div>
+    </main>
+  );
 }
 
 export default Exercises;
