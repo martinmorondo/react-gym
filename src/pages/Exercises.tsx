@@ -29,13 +29,15 @@ searchTerm,
 muscleGroup,
 difficulty,
 equipment,
+favoritesOnly,
 filteredExercises,
 setSearchTerm,
 setMuscleGroup,
 setDifficulty,
 setEquipment,
+setFavoritesOnly,
 clearFilters,
-} = useExerciseFilters(exercises);
+} = useExerciseFilters(exercises, isFavorite);
 
 return ( <main className="min-h-screen bg-gray-900 px-4 py-10"> <div className="mx-auto max-w-7xl"> <header className="mb-10"> <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-blue-400">
 Biblioteca </p>
@@ -81,6 +83,7 @@ Biblioteca </p>
           muscleGroup={muscleGroup}
           difficulty={difficulty}
           equipment={equipment}
+          favoritesOnly={favoritesOnly}
           muscleGroups={uniqueMuscleGroups}
           difficulties={uniqueDifficulties}
           equipments={uniqueEquipments}
@@ -88,10 +91,14 @@ Biblioteca </p>
           onMuscleGroupChange={setMuscleGroup}
           onDifficultyChange={setDifficulty}
           onEquipmentChange={setEquipment}
+          onFavoritesChange={setFavoritesOnly}
           onClear={clearFilters}
         />
 
-        <div className="mb-4 text-sm text-gray-400" aria-live="polite">
+        <div
+          className="mb-4 text-sm text-gray-400"
+          aria-live="polite"
+        >
           {filteredExercises.length === 1
             ? '1 ejercicio encontrado'
             : `${filteredExercises.length} ejercicios encontrados`}

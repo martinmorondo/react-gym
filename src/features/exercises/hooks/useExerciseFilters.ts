@@ -8,16 +8,21 @@ searchTerm: string;
 muscleGroup: string;
 difficulty: string;
 equipment: string;
+favoritesOnly: boolean;
 filteredExercises: Exercise[];
 setSearchTerm: (value: string) => void;
 setMuscleGroup: (value: string) => void;
 setDifficulty: (value: string) => void;
 setEquipment: (value: string) => void;
+setFavoritesOnly: (value: boolean) => void;
 clearFilters: () => void;
 };
 
+type FavoriteChecker = (exerciseId: string) => boolean;
+
 export function useExerciseFilters(
-exercises: Exercise[]
+exercises: Exercise[],
+isFavorite: FavoriteChecker
 ): UseExerciseFiltersResult {
 const [searchParams, setSearchParams] = useSearchParams();
 
@@ -28,6 +33,7 @@ const [searchTerm, setSearchTermState] = useState(
 const muscleGroup = searchParams.get('muscleGroup') ?? '';
 const difficulty = searchParams.get('difficulty') ?? '';
 const equipment = searchParams.get('equipment') ?? '';
+const favoritesOnly = searchParams.get('favorites') === 'true';
 
 const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -54,9 +60,16 @@ const filteredExercises = useMemo(() => {
 const normalizedSearchTerm = searchTerm.trim().toLowerCase();
 
 return exercises.filter((exercise) => {
-  const matchesSearch =
-    normalizedSearchTerm === '' ||
-    exercise.name.toLowerCase().includes(normalizedSearchTerm);
+  const searchableText = [
+  exercise.name,
+  exercise.description,
+  exercise.muscleGroup,
+  exercise.equipment,
+].join(' ').toLowerCase();
+
+const matchesSearch =
+  normalizedSearchTerm === '' ||
+  searchableText.includes(normalizedSearchTerm);
 
   const matchesMuscleGroup =
     muscleGroup === '' || exercise.muscleGroup === muscleGroup;
@@ -67,15 +80,27 @@ return exercises.filter((exercise) => {
   const matchesEquipment =
     equipment === '' || exercise.equipment === equipment;
 
+  const matchesFavorite =
+    !favoritesOnly || isFavorite(exercise.id);
+
   return (
     matchesSearch &&
     matchesMuscleGroup &&
     matchesDifficulty &&
-    matchesEquipment
+    matchesEquipment &&
+    matchesFavorite
   );
 });
 
-}, [exercises, searchTerm, muscleGroup, difficulty, equipment]);
+}, [
+exercises,
+searchTerm,
+muscleGroup,
+difficulty,
+equipment,
+favoritesOnly,
+isFavorite,
+]);
 
 const updateFilter = (key: string, value: string) => {
 if (key === 'search') {
@@ -94,6 +119,18 @@ if (value) {
 setSearchParams(nextParams);
 };
 
+const setFavoritesOnly = (value: boolean) => {
+const nextParams = new URLSearchParams(searchParams);
+
+if (value) {
+  nextParams.set('favorites', 'true');
+} else {
+  nextParams.delete('favorites');
+}
+
+setSearchParams(nextParams);
+};
+
 const clearFilters = () => {
 setSearchTermState('');
 setSearchParams({});
@@ -104,11 +141,13 @@ searchTerm,
 muscleGroup,
 difficulty,
 equipment,
+favoritesOnly,
 filteredExercises,
 setSearchTerm: (value) => updateFilter('search', value),
 setMuscleGroup: (value) => updateFilter('muscleGroup', value),
 setDifficulty: (value) => updateFilter('difficulty', value),
 setEquipment: (value) => updateFilter('equipment', value),
+setFavoritesOnly,
 clearFilters,
 };
 }

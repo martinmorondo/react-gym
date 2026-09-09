@@ -3,6 +3,7 @@ searchTerm: string;
 muscleGroup: string;
 difficulty: string;
 equipment: string;
+favoritesOnly: boolean;
 muscleGroups: string[];
 difficulties: string[];
 equipments: string[];
@@ -10,6 +11,7 @@ onSearchChange: (value: string) => void;
 onMuscleGroupChange: (value: string) => void;
 onDifficultyChange: (value: string) => void;
 onEquipmentChange: (value: string) => void;
+onFavoritesChange: (value: boolean) => void;
 onClear: () => void;
 };
 
@@ -18,6 +20,7 @@ searchTerm,
 muscleGroup,
 difficulty,
 equipment,
+favoritesOnly,
 muscleGroups,
 difficulties,
 equipments,
@@ -25,6 +28,7 @@ onSearchChange,
 onMuscleGroupChange,
 onDifficultyChange,
 onEquipmentChange,
+onFavoritesChange,
 onClear,
 }: ExerciseFiltersProps) {
 return ( <section
@@ -35,6 +39,7 @@ return ( <section
      className="mb-5 text-lg font-semibold text-white"
    >
 Buscar y filtrar </h2>
+
   <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
     <div>
       <label
@@ -127,11 +132,24 @@ Buscar y filtrar </h2>
     </div>
   </div>
 
-  <div className="mt-4">
+  <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <label className="inline-flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-200">
+      <input
+        type="checkbox"
+        checked={favoritesOnly}
+        onChange={(event) => onFavoritesChange(event.target.checked)}
+        className="h-4 w-4 rounded border-gray-600 bg-gray-900 text-blue-600 focus:ring-2 focus:ring-blue-500"
+      />
+
+      <span>
+        Mostrar solo favoritos
+      </span>
+    </label>
+
     <button
       type="button"
       onClick={onClear}
-      className="rounded-md border border-gray-600 px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="self-start rounded-md border border-gray-600 px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:self-auto"
     >
       Limpiar filtros
     </button>
