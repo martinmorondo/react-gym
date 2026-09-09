@@ -2,9 +2,15 @@ import ExerciseFilters from '../features/exercises/components/ExerciseFilters';
 import ExerciseList from '../features/exercises/components/ExerciseList';
 import { useExerciseFilters } from '../features/exercises/hooks/useExerciseFilters';
 import { useExercises } from '../features/exercises/hooks/useExercises';
+import { useFavorites } from '../features/exercises/hooks/useFavorites';
 
 function Exercises() {
 const { exercises, isLoading, error, refetch } = useExercises();
+
+const {
+isFavorite,
+toggleFavorite,
+} = useFavorites();
 
 const uniqueMuscleGroups = [
 ...new Set(exercises.map((exercise) => exercise.muscleGroup)),
@@ -91,7 +97,11 @@ Biblioteca </p>
             : `${filteredExercises.length} ejercicios encontrados`}
         </div>
 
-        <ExerciseList exercises={filteredExercises} />
+        <ExerciseList
+          exercises={filteredExercises}
+          isFavorite={isFavorite}
+          onToggleFavorite={toggleFavorite}
+        />
       </>
     )}
   </div>

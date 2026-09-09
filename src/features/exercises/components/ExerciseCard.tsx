@@ -2,16 +2,37 @@ import type { Exercise } from '../../../types/exercise';
 
 type ExerciseCardProps = {
 exercise: Exercise;
+isFavorite: boolean;
+onToggleFavorite: (exerciseId: string) => void;
 };
 
-function ExerciseCard({ exercise }: ExerciseCardProps) {
-return ( <article className="overflow-hidden rounded-lg bg-white shadow-lg">
+function ExerciseCard({
+exercise,
+isFavorite,
+onToggleFavorite,
+}: ExerciseCardProps) {
+return ( <article className="overflow-hidden rounded-lg bg-white shadow-lg"> <div className="relative">
 <img
 src={exercise.image}
 alt={`Ejercicio: ${exercise.name}`}
 className="h-56 w-full object-cover"
 loading="lazy"
 />
+
+    <button
+      type="button"
+      onClick={() => onToggleFavorite(exercise.id)}
+      className="absolute right-3 top-3 rounded-full bg-black/60 p-2 text-xl text-white backdrop-blur-sm transition-colors hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-white"
+      aria-label={
+        isFavorite
+          ? `Quitar ${exercise.name} de favoritos`
+          : `Agregar ${exercise.name} a favoritos`
+      }
+      aria-pressed={isFavorite}
+    >
+      {isFavorite ? '★' : '☆'}
+    </button>
+  </div>
 
   <div className="p-5">
     <div className="mb-3 flex flex-wrap gap-2">
