@@ -1,4 +1,5 @@
 import type { Exercise } from '../../../types/exercise';
+import { Link } from 'react-router-dom';
 
 type ExerciseCardProps = {
 exercise: Exercise;
@@ -46,7 +47,12 @@ loading="lazy"
     </div>
 
     <h2 className="mb-2 text-xl font-bold text-gray-900">
-      {exercise.name}
+      <Link
+        to={`/exercises/${exercise.id}`}
+        className="rounded-sm transition-colors hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+      >
+        {exercise.name}
+      </Link>
     </h2>
 
     <p className="mb-4 text-sm leading-6 text-gray-600">

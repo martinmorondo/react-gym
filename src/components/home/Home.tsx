@@ -37,12 +37,6 @@ function Home() {
     setIsJoinModalOpen(false);
   };
 
- const handleJoinSubmit = async (
-  event: FormEvent<HTMLFormElement>
-) => {
-  await handleSubmit(event);
-};
-
   return (
     <main className="bg-gray-900">
       <section className="bg-gray-900">
@@ -168,7 +162,7 @@ function Home() {
 
             {submitStatus !== 'success' && (
               <form
-                onSubmit={handleJoinSubmit}
+                onSubmit={handleSubmit}
                 className="space-y-4"
                 noValidate
               >
@@ -192,6 +186,7 @@ function Home() {
                     aria-describedby={
                       errors.name ? 'join-name-error' : undefined
                     }
+                    required
                     className={`w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
                       errors.name
                         ? 'border-red-500'
@@ -229,6 +224,7 @@ function Home() {
                     aria-describedby={
                       errors.email ? 'join-email-error' : undefined
                     }
+                    required
                     className={`w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
                       errors.email
                         ? 'border-red-500'
@@ -266,6 +262,7 @@ function Home() {
                     aria-describedby={
                       errors.phone ? 'join-phone-error' : undefined
                     }
+                    required
                     className={`w-full rounded-md border bg-white px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
                       errors.phone
                         ? 'border-red-500'
@@ -305,6 +302,7 @@ function Home() {
                         : undefined
                     }
                     placeholder="Contanos qué querés conseguir con tu entrenamiento."
+                    required
                     className={`w-full resize-y rounded-md border bg-white px-3 py-2 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-60 ${
                       errors.question
                         ? 'border-red-500'
