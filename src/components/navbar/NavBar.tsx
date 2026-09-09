@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { NavLink, type NavLinkProps } from 'react-router-dom';
 
 const navigationItems = [
-{ label: 'Inicio', path: '/' },
-{ label: 'Servicios', path: '/services' },
-{ label: 'Testimonios', path: '/testimonials' },
-{ label: 'Contacto', path: '/contact' },
+  { label: 'Inicio', path: '/' },
+  { label: 'Ejercicios', path: '/exercises' },
+  { label: 'Servicios', path: '/services' },
+  { label: 'Testimonios', path: '/testimonials' },
+  { label: 'Contacto', path: '/contact' },
 ];
 
 function NavBar() {
