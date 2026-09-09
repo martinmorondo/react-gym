@@ -104,11 +104,13 @@ Biblioteca </p>
             : `${filteredExercises.length} ejercicios encontrados`}
         </div>
 
-        <ExerciseList
-          exercises={filteredExercises}
-          isFavorite={isFavorite}
-          onToggleFavorite={toggleFavorite}
-        />
+       <ExerciseList
+        exercises={filteredExercises}
+        totalExercises={exercises.length}
+        isFavorite={isFavorite}
+        onToggleFavorite={toggleFavorite}
+        onClearFilters={clearFilters}
+      />
       </>
     )}
   </div>
